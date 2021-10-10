@@ -18,25 +18,6 @@ RSpec.describe 'csv_processor' do
     :what_is_your_favourite_color=>"Blue"
     }
 
-  # This assumes we are always using the same test CSV
-  it 'reads and outputs each row of the csv' do
-    expect(csv_processor.parse_file('exercise/contacts.csv').first).to eq({
-      :first_name => "Margaret",
-      :last_name => "Padberg",
-      :email => "magpads@gmail.com",
-      :phone => "(599) 684-9711",
-      :address_line_1 => "325 Donato Ridges",
-      :city => "Veumhaven",
-      :province => "OH",
-      :postcode => "51234",
-      :country_name => "USA",
-      :date_added => "2015-05-06 08:32:21 UTC",
-      :how_did_you_hear_about_us => "TV",
-      :what_is_your_budget => "$200-$299",
-      :what_is_your_favourite_color => "Orange"
-      })
-  end
-
   it 'filters rows with nil values for contact info' do
     row_hash_with_nil = row_hash.clone
     row_hash_with_nil[:email] = nil

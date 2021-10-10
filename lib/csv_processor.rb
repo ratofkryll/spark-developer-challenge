@@ -1,10 +1,11 @@
 require 'csv'
 
 class CsvProcessor
+  @@errors = []
+
   # Open a CSV and return a collection we can work with
   def parse_file(csv)
-    data = []
-    errors = []
+    csv_data = []
     invalid_rows = 0
 
     CSV.foreach(csv, headers: true, header_converters: :symbol).with_index(1) do |row, i|
@@ -12,15 +13,15 @@ class CsvProcessor
 
       if validate_row(row_hash)
       # This way will eat a lot of memory for large files. TODO: Refactor for large file handling
-        data << row_hash
+        csv_data << row_hash
       else
         invalid_rows += 1
-        errors << "Row #{i} is missing contact info.\n"
+        @@errors << "Row #{i} is missing contact info.\n"
       end
     end
-    valid_data = filter_duplicate_rows(data)
-    print_report(valid_data.count, count_duplicate_rows(data), invalid_rows, errors)
+    valid_data = filter_duplicate_rows(csv_data)
     list_valid_contacts(valid_data)
+    print_report(valid_data.count, count_duplicate_rows(csv_data), invalid_rows, @@errors)
   end
 
   ## Validation
@@ -70,13 +71,17 @@ class CsvProcessor
   # Prints a report of the contacts to the console
   def print_report(total_contacts, duplicate_contacts, invalid_contacts, errors)
     # Contact summary
+    print "Summary:\n"
     print "Total Contacts: #{total_contacts}\nDuplicate Contacts: #{duplicate_contacts}\nInvalid Contacts: #{invalid_contacts}\n\n"
 
     # Validation errors
-    print "Errors:"
+    print "Errors:\n"
     errors.each do |error|
       print error
     end
     print "\n"
   end
 end
+
+csv_processor = CsvProcessor.new
+csv_processor.parse_file('exercise/contacts.csv')
