@@ -1,4 +1,4 @@
-### Tech Specs
+### Tech Specs & Gems
 
 * Ruby 3.0.1
 * Rspec 3.10.0
@@ -10,6 +10,8 @@
   * Output contents to command line
 2. Validate CSV rows
   * Return errors for invalid rows
+  * Get a count of duplicate rows
+  * Sort contacts and filter out duplicate rows
 3. Create a contact summary - tallies of valid, invalid, and duplicate contacts
 4. Map questions to the contacts who answered them
 
