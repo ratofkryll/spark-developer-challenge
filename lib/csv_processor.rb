@@ -19,10 +19,11 @@ class CsvProcessor
     data
   end
 
-  # Check if the row is missing contact information.
+  # Check if the row is missing contact information
   def validate_row(row_hash)
     return unless row_hash
 
+    # Add required keys to a variable, mainly for readability
     required_keys = [:first_name, :last_name, :email, :phone, :address_line_1, :city, :province, :country_name, :postcode, :date_added]
 
     # Returns false if any of the required keys are nil or an empty string. In Rails, you could use .blank? to check for both nil and an empty string
