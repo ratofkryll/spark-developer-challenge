@@ -18,7 +18,7 @@ class CsvProcessor
         errors << "Row #{i} is missing contact info.\n"
       end
     end
-    # filter_duplicate_rows(data)
+    count_duplicate_rows(data)
     print_report(33, 2, invalid_rows, errors)
     data
   end
@@ -34,13 +34,13 @@ class CsvProcessor
     required_keys.all? { |x| !row_hash[x].nil? && !row_hash[x].empty? }
   end
 
-  # def filter_duplicate_rows(csv_data)
-  #   grouped_data = csv_data.group_by { |row| [row[:first_name], row[:last_name], row[:email]] }
-  #
-  #   grouped_data.transform_values(&:count)
-  #
-  #   puts grouped_data
-  # end
+  def count_duplicate_rows(csv_data)
+    grouped_data = csv_data.group_by { |row| [row[:first_name], row[:last_name], row[:email]] }
+
+    grouped_data.transform_values(&:count)
+
+    puts grouped_data
+  end
 
   # Prints a report of the contacts to the console
   def print_report(total_contacts, duplicate_contacts, invalid_contacts, errors)
