@@ -4,6 +4,7 @@
 * Rspec 3.10.0
 
 ### My Coding Steps
+
 1. Basic CSV handling
   * Import file
   * Output contents to command line
@@ -11,3 +12,7 @@
   * Return errors for invalid rows
 3. Create a contact summary - tallies of valid, invalid, and duplicate contacts
 4. Map questions to the contacts who answered them
+
+### Assumptions
+
+* All contact info fields and date_added are required for a contact to be valid
