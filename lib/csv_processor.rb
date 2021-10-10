@@ -18,9 +18,9 @@ class CsvProcessor
         errors << "Row #{i} is missing contact info.\n"
       end
     end
-    valid_rows = filter_duplicate_rows(data)
-    print_report(valid_rows.count, count_duplicate_rows(data), invalid_rows, errors)
-    valid_rows
+    valid_data = filter_duplicate_rows(data)
+    print_report(valid_data.count, count_duplicate_rows(data), invalid_rows, errors)
+    list_valid_contacts(valid_data)
   end
 
   ## Validation
@@ -53,20 +53,30 @@ class CsvProcessor
     sorted_data.uniq { |row| [row[:first_name], row[:last_name], row[:email], row[:phone]] }
   end
 
-  ## Data Manipulation
-
-
-
   ## Reporting
+
+  # Prints a list of contacts and their answers
+  def list_valid_contacts(csv_data)
+    csv_data.each do |contact|
+      # Contact information
+      print "#{contact[:first_name]} #{contact[:last_name]}\n#{contact[:email]} | #{contact[:phone]}\n#{contact[:address_line_1]}\n#{contact[:city]}, #{contact[:province]} #{contact[:postcode]}\n#{contact[:country_name]}\n"
+      # Answers
+      print "How did you hear about us? #{contact[:how_did_you_hear_about_us]}\n"
+      print "What is your budget? #{contact[:what_is_your_budget]}\n"
+      print "What is your favourite colour? #{contact[:what_is_your_favourite_color]}\n\n"
+    end
+  end
 
   # Prints a report of the contacts to the console
   def print_report(total_contacts, duplicate_contacts, invalid_contacts, errors)
     # Contact summary
-    print "Total Contacts: #{total_contacts}\nDuplicate Contacts: #{duplicate_contacts}\nInvalid Contacts: #{invalid_contacts}\n"
+    print "Total Contacts: #{total_contacts}\nDuplicate Contacts: #{duplicate_contacts}\nInvalid Contacts: #{invalid_contacts}\n\n"
 
     # Validation errors
+    print "Errors:"
     errors.each do |error|
       print error
     end
+    print "\n"
   end
 end
