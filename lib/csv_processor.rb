@@ -19,9 +19,15 @@ class CsvProcessor
         @@errors << "Row #{i} is missing contact info.\n"
       end
     end
+
     valid_data = filter_duplicate_rows(csv_data)
+
     list_valid_contacts(valid_data)
-    print_report(valid_data.count, count_duplicate_rows(csv_data), invalid_rows, @@errors)
+    print_report(valid_data.count, count_duplicate_rows(csv_data), invalid_rows)
+    map_answers(valid_data, question: :how_did_you_hear_about_us)
+    map_answers(valid_data, question: :what_is_your_budget)
+    map_answers(valid_data, question: :what_is_your_favourite_color)
+    print_errors(@@errors)
   end
 
   ## Validation
@@ -69,14 +75,22 @@ class CsvProcessor
   end
 
   # Prints a report of the contacts to the console
-  def print_report(total_contacts, duplicate_contacts, invalid_contacts, errors)
+  def print_report(total_contacts, duplicate_contacts, invalid_contacts)
     # Contact summary
     print "Summary:\n"
     print "Total Contacts: #{total_contacts}\nDuplicate Contacts: #{duplicate_contacts}\nInvalid Contacts: #{invalid_contacts}\n\n"
+  end
 
-    # Validation errors
+  # Prints a tally of survey answers
+  def map_answers(csv_data, question:)
+    print "Answered #{question.to_s.gsub('_', ' ')}?\n"
+    print csv_data.group_by{ |row| row[question]&.empty? }[false].map{|x| [x.slice(:first_name, :last_name).values.join(' '), x[question]].join(': ') }.join("\n")
+    print "\n\n"
+  end
+
+  def print_errors(errors)
     print "Errors:\n"
-    errors.each do |error|
+    @@errors.each do |error|
       print error
     end
     print "\n"

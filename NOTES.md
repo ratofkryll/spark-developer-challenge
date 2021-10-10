@@ -18,3 +18,4 @@
 ### Assumptions
 
 * All contact info fields and date_added are required for a contact to be valid
+* People are unlikely to change their email address or phone number if they move
