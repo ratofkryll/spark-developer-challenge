@@ -44,15 +44,18 @@ class CsvProcessor
     grouped_data.count { |k,v| v > 1 }
   end
 
-  # Return a new array with
+  # Return a new array with duplicate contacts removed
   def filter_duplicate_rows(csv_data)
-    sorted_data = csv_data.sort_by { |contact| contact[:date_added]}.reverse!
-    sorted_data.uniq { |contact| [contact[:first_name], contact[:last_name], contact[:email], contact[:phone]] }
+    # Sort the entire array on date and reverse to sort descending
+    sorted_data = csv_data.sort_by { |row| row[:date_added]}.reverse!
+
+    # Select the first unique contact that matches all of the required values.
+    sorted_data.uniq { |row| [row[:first_name], row[:last_name], row[:email], row[:phone]] }
   end
 
   ## Data Manipulation
 
-  
+
 
   ## Reporting
 
