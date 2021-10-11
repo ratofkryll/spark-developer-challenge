@@ -15,7 +15,8 @@ RSpec.describe 'csv_processor' do
     :date_added=>"2015-02-24 10:54:02 UTC",
     :how_did_you_hear_about_us=>"Newspaper",
     :what_is_your_budget=>"$200-$299",
-    :what_is_your_favourite_color=>"Blue"
+    :what_is_your_favourite_color=>"Blue",
+    :validation_errors => []
     }
 
   it 'filters rows with nil values for contact info' do
@@ -50,7 +51,9 @@ RSpec.describe 'csv_processor' do
       :date_added=>"2015-02-24 10:54:02 UTC",
       :how_did_you_hear_about_us=>"Newspaper",
       :what_is_your_budget=>"$200-$299",
-      :what_is_your_favourite_color=>"Blue"
+      :what_is_your_favourite_color=>"Blue",
+      :validation_errors => []
+
       },
       {
       :first_name=>"Glenda",
@@ -65,57 +68,10 @@ RSpec.describe 'csv_processor' do
       :date_added=>"2015-02-24 10:54:02 UTC",
       :how_did_you_hear_about_us=>"Newspaper",
       :what_is_your_budget=>"$200-$299",
-      :what_is_your_favourite_color=>"Blue"
-      }]
-    expect(csv_processor.count_duplicate_rows(duplicate_row_hash)).to eq 1
-  end
+      :what_is_your_favourite_color=>"Blue",
+      :validation_errors => []
 
-  it 'keeps the most recent duplicate contact and filters out the rest' do
-    duplicate_row_hash = [{
-      :first_name=>"Glenda",
-      :last_name=>"Rosas",
-      :email=>"glendarrosas@dodgit.com",
-      :phone=>"613-937-0694",
-      :address_line_1=>"326 Donato Ridges",
-      :city=>"Rimbey",
-      :province=>"AB",
-      :country_name=>"Canada",
-      :postcode=>"T0C 2J0",
-      :date_added=>"2015-02-24 10:54:02 UTC",
-      :how_did_you_hear_about_us=>"TV",
-      :what_is_your_budget=>"$200-$299",
-      :what_is_your_favourite_color=>"Orange"
-      },
-      {
-      :first_name=>"Glenda",
-      :last_name=>"Rosas",
-      :email=>"glendarrosas@dodgit.com",
-      :phone=>"613-937-0694",
-      :address_line_1=>"326 Donato Ridges",
-      :city=>"Rimbey",
-      :province=>"AB",
-      :country_name=>"Canada",
-      :postcode=>"T0C 2J0",
-      :date_added=>"2015-06-24 10:54:02 UTC",
-      :how_did_you_hear_about_us=>"Newspaper",
-      :what_is_your_budget=>"$200-$299",
-      :what_is_your_favourite_color=>"Blue"
       }]
-
-      expect(csv_processor.filter_duplicate_rows(duplicate_row_hash)).to eq([{
-        :first_name=>"Glenda",
-        :last_name=>"Rosas",
-        :email=>"glendarrosas@dodgit.com",
-        :phone=>"613-937-0694",
-        :address_line_1=>"326 Donato Ridges",
-        :city=>"Rimbey",
-        :province=>"AB",
-        :country_name=>"Canada",
-        :postcode=>"T0C 2J0",
-        :date_added=>"2015-06-24 10:54:02 UTC",
-        :how_did_you_hear_about_us=>"Newspaper",
-        :what_is_your_budget=>"$200-$299",
-        :what_is_your_favourite_color=>"Blue"
-        }])
+    expect(csv_processor.mark_duplicate_rows(duplicate_row_hash)).to eq 1
   end
 end
