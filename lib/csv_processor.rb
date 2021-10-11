@@ -8,6 +8,7 @@ class CsvProcessor
 
     CSV.foreach(csv, headers: true, header_converters: :symbol).with_index(1) do |row, i|
       row_hash = row.to_h
+      # Add row number here for error reporting
       row_hash[:row_number] = i
       row_hash[:validation_errors] = row_validation_errors(row_hash)
       invalid_row_count += 1 unless row_hash[:validation_errors].empty?
@@ -38,17 +39,22 @@ class CsvProcessor
     validation_errors = []
     # Add required keys to a variable, mainly for readability
     required_keys = [:first_name, :last_name, :email, :phone, :address_line_1, :city, :province, :country_name, :postcode, :date_added]
+
     required_keys.each do |key|
       validation_errors.append(key) if row_hash[key]&.empty? != false
     end
+
     validation_errors
   end
 
-  # Return a count of duplicate rows
+  # Return a count of duplicate rows & add validation errors
   def mark_duplicate_rows(csv_data)
     # Grouping on first name, last name, email & phone - two different people with the same name shouldn't be counted as one, and if a person has moved they won't be counted as two (people are likely to keep the same email and phone number)
     grouped_data = csv_data.group_by { |row| [row[:first_name], row[:last_name], row[:email], row[:phone]] }
+
+    # Add validation errors
     grouped_data.each do |k,rows|
+      # Sort by date and reverse first to make sure we don't add the errors to the wrong row
       rows.sort_by! { |row| row[:date_added]}.reverse!
       rows[1..].each do |row|
         row[:validation_errors].append(:duplicate)
@@ -74,7 +80,6 @@ class CsvProcessor
 
   # Prints a report of the contacts to the console
   def print_report(total_contacts, duplicate_contacts, invalid_contacts)
-    # Contact summary
     print "Summary:\n"
     print "Total Valid Contacts: #{total_contacts}\nDuplicate Contacts: #{duplicate_contacts}\nInvalid Contacts: #{invalid_contacts}\n\n"
   end
@@ -86,6 +91,7 @@ class CsvProcessor
     print "\n\n"
   end
 
+  # Prints a list of rows with errors, and lists their errors
   def print_errors(rows)
     print "Errors:\n"
     rows.each do |row|
